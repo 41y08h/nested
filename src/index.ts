@@ -9,8 +9,8 @@ async function main() {
   const api = createAPIRouter();
   app.use(api);
 
-  app.listen(3000);
-  console.log("ready on port 3000");
+  app.listen(5000);
+  console.log("ready on port 5000");
 }
 
 main();
