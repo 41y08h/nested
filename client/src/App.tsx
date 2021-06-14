@@ -5,7 +5,6 @@ import {
   Form,
   InputGroup,
   Button,
-  ProgressBar,
 } from "react-bootstrap";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import ITodo from "./interfaces/Todo";
@@ -15,7 +14,7 @@ import Todo from "./components/Todo";
 
 function App() {
   const queryClient = useQueryClient();
-  const { isLoading, data, isFetching } = useQuery<ITodo[]>("/todos");
+  const { isLoading, data } = useQuery<ITodo[]>("/todos");
   const inputRef = useRef<HTMLInputElement>(null);
   const todosMutation = useMutation((text: string) =>
     axios.post<ITodo>("/todos", { text }).then((res) => res.data)
@@ -40,14 +39,25 @@ function App() {
     );
   };
 
+  const handleTodoEdited = (updatedTodo: ITodo) => {
+    queryClient.setQueryData<ITodo[]>("/todos", (old) =>
+      old
+        ? old.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+        : []
+    );
+  };
+
   return (
     <Container>
       <div
         className="mx-auto my-4 mt-5 p-4 rounded"
-        style={{ width: "100%", maxWidth: "23rem" }}
+        style={{ width: "100%", maxWidth: "28rem" }}
       >
-        {isFetching && <ProgressBar animated now={100} className="rounded-0" />}
-        {isLoading && <Spinner animation="border" />}
+        {isLoading && (
+          <div className="d-flex justify-content-center align-items-center py-5">
+            <Spinner animation="border" />
+          </div>
+        )}
         {data && (
           <>
             {!data.length && (
@@ -62,7 +72,12 @@ function App() {
             )}
             <ListGroup className="rounded-0">
               {data.map((todo) => (
-                <Todo todo={todo} onDeleted={handleTodoDeleted} />
+                <Todo
+                  key={todo.id}
+                  todo={todo}
+                  onDeleted={handleTodoDeleted}
+                  onEdited={handleTodoEdited}
+                />
               ))}
             </ListGroup>
           </>
@@ -77,8 +92,9 @@ function App() {
             />
             <Button
               disabled={todosMutation.isLoading}
-              variant="dark"
+              variant="primary"
               type="submit"
+              className="px-4"
             >
               {todosMutation.isLoading ? (
                 <Spinner animation="border" size="sm" />

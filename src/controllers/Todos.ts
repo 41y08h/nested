@@ -39,7 +39,7 @@ const Todos: IController = {
         } = await db.query<ITodo>(
           `
           update todos 
-          set text = coalesce($1, todos.text),
+          set text = coalesce($1, todos.text)
           where id = $2 
           returning *
           `,
