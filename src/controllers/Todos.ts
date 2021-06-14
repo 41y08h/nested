@@ -33,7 +33,6 @@ const Todos: IController = {
       async handle(req, res) {
         const todoId = parseInt(req.params.id);
         const text: string = req.body.text;
-        const isComplete: boolean = req.body.isComplete;
 
         const {
           rows: [todo],
@@ -41,11 +40,10 @@ const Todos: IController = {
           `
           update todos 
           set text = coalesce($1, todos.text),
-              "isComplete" = coalesce($2, todos."isComplete")
-          where id = $3 
+          where id = $2 
           returning *
           `,
-          [text, isComplete, todoId]
+          [text, todoId]
         );
 
         res.json(todo);
