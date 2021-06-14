@@ -5,6 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: transparent;
+}
+
+html {
+  background-color: #fff;
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
 }
 
 code {

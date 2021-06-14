@@ -42,14 +42,24 @@ function App() {
 
   return (
     <Container>
-      <h1 className="text-center my-4">Todos</h1>
-      <div className="col-6 mx-auto my-4">
+      <div
+        className="mx-auto my-4 mt-5 p-4 rounded"
+        style={{ width: "100%", maxWidth: "23rem" }}
+      >
         {isFetching && <ProgressBar animated now={100} className="rounded-0" />}
         {isLoading && <Spinner animation="border" />}
-
         {data && (
           <>
-            {!data.length && <p>No todos yet</p>}
+            {!data.length && (
+              <div className="text-center">
+                <img
+                  className="img-fluid"
+                  src="https://github.githubassets.com/images/modules/notifications/inbox-zero.svg"
+                  alt="work"
+                />
+                <h5 className="mt-5">All caught up!</h5>
+              </div>
+            )}
             <ListGroup className="rounded-0">
               {data.map((todo) => (
                 <Todo todo={todo} onDeleted={handleTodoDeleted} />
