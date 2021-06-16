@@ -1,6 +1,10 @@
 {
     "name": "@nested/common",
     "version": "1.0.0",
-    "main": "index.ts",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
     "license": "MIT"
 }

@@ -10,5 +10,6 @@
     "strictBindCallApply": true,
     "strictPropertyInitialization": true,
     "noImplicitThis": true
-  }
+  },
+  "include": ["src"]
 }
