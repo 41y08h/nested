@@ -1,5 +1,5 @@
 import axios from 'axios'
-import ITodo from '../interfaces/Todo'
+import { ITodo } from '@nested/common'
 import Button from '../components/Button'
 import { useMutation } from 'react-query'
 import { FC, FormEventHandler, useState, useRef } from 'react'

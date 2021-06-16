@@ -1,1 +1,5 @@
-export default 'hello string from common'
+export interface ITodo {
+  id: number
+  text: string
+  createdAt: Date
+}

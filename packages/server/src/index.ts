@@ -1,9 +1,7 @@
 import express from 'express'
 import createAPIRouter from './lib/createAPIRouter'
-import common from '@nested/common'
 
 async function main() {
-  console.log(common)
   const app = express()
 
   app.use(express.json())

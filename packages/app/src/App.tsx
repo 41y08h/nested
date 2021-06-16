@@ -1,7 +1,7 @@
 import { Form, ListGroup, Container, InputGroup } from 'react-bootstrap'
 import axios from 'axios'
 import Todo from './components/Todo'
-import ITodo from './interfaces/Todo'
+import { ITodo } from '@nested/common'
 import NoTodos from './components/NoTodos'
 import Button from './components/Button'
 import AsyncData from './components/AsyncData'

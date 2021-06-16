@@ -1,38 +1,38 @@
-import db from "../db";
-import IController from "../interfaces/Controller";
-import ITodo from "../interfaces/Todo";
+import db from '../db'
+import IController from '../interfaces/Controller'
+import { ITodo } from '@nested/common'
 
 const Todos: IController = {
-  route: "/todos",
+  route: '/todos',
   handlers: [
     {
-      path: "/",
+      path: '/',
       async handle(req, res) {
-        const { rows: todos } = await db.query<ITodo>(`select * from todos`);
-        res.json(todos);
+        const { rows: todos } = await db.query<ITodo>(`select * from todos`)
+        res.json(todos)
       },
     },
     {
-      path: "/",
-      method: "post",
+      path: '/',
+      method: 'post',
       async handle(req, res) {
-        const { text }: { text: string } = req.body;
+        const { text }: { text: string } = req.body
         const {
           rows: [todo],
         } = await db.query<ITodo>(
           `insert into todos (text) values ($1) returning *`,
           [text]
-        );
+        )
 
-        res.status(201).json(todo);
+        res.status(201).json(todo)
       },
     },
     {
-      path: "/:id",
-      method: "patch",
+      path: '/:id',
+      method: 'patch',
       async handle(req, res) {
-        const todoId = parseInt(req.params.id);
-        const text: string = req.body.text;
+        const todoId = parseInt(req.params.id)
+        const text: string = req.body.text
 
         const {
           rows: [todo],
@@ -44,25 +44,25 @@ const Todos: IController = {
           returning *
           `,
           [text, todoId]
-        );
+        )
 
-        res.json(todo);
+        res.json(todo)
       },
     },
     {
-      path: "/:id",
-      method: "delete",
+      path: '/:id',
+      method: 'delete',
       async handle(req, res) {
-        const todoId = parseInt(req.params.id);
+        const todoId = parseInt(req.params.id)
         const { rowCount } = await db.query<ITodo>(
           `delete from todos where id = $1`,
           [todoId]
-        );
+        )
 
-        rowCount === 1 ? res.sendStatus(200) : res.sendStatus(400);
+        rowCount === 1 ? res.sendStatus(200) : res.sendStatus(400)
       },
     },
   ],
-};
+}
 
-export default Todos;
+export default Todos
