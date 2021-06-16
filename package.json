@@ -7,5 +7,8 @@
     },
     "scripts": {
         "dev": "concurrently --handle-input --prefix @nested:{name} --names common,server,app --prefix-colors blue.bold \"yarn --cwd packages/common build:watch\" \"yarn --cwd packages/server dev\" \"yarn --cwd packages/app start\""
+    },
+    "dependencies": {
+        "concurrently": "^6.2.0"
     }
 }
