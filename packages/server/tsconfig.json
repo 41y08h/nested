@@ -1,20 +1,14 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
     "outDir": "build",
-    "moduleResolution": "node",
-    "strict": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
     "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  "include": ["src/**/*"]
+    "noImplicitThis": true
+  }
 }
