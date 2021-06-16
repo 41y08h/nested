@@ -1,87 +1,91 @@
 import {
-  Container,
+  Form,
+  Button,
   Spinner,
   ListGroup,
-  Form,
+  Container,
   InputGroup,
-  Button,
 } from "react-bootstrap";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import ITodo from "./interfaces/Todo";
-import { FormEventHandler, useRef } from "react";
 import axios from "axios";
 import Todo from "./components/Todo";
+import ITodo from "./interfaces/Todo";
+import Loading from "./components/Loading";
+import AsyncData from "./components/AsyncData";
+import { FormEventHandler, useRef } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
-function App() {
+type TInput = HTMLInputElement;
+const key = "/todos";
+
+export default function App() {
   const queryClient = useQueryClient();
-  const { isLoading, data } = useQuery<ITodo[]>("/todos");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const todosMutation = useMutation((text: string) =>
-    axios.post<ITodo>("/todos", { text }).then((res) => res.data)
-  );
+  const inputRef = useRef<TInput>(null);
+  const todos = useQuery<ITodo[]>(key);
 
-  const handleSubmit: FormEventHandler = async (e) => {
-    e.preventDefault();
+  const todosMutation = useMutation(async (text: string) => {
+    const { data } = await axios.post<ITodo>(key, { text });
+    return data;
+  });
+
+  const handleSubmit: FormEventHandler = async (event) => {
+    event.preventDefault();
     const input = inputRef.current;
-    if (!input?.value) return;
 
+    // Terminate early with falsy values
+    if (!input?.value.trim()) return;
+
+    // Make network request and update the query data
     const data = await todosMutation.mutateAsync(input.value);
-    input.value = "";
-
-    queryClient.setQueryData<ITodo[]>("/todos", (old) =>
+    queryClient.setQueryData<ITodo[]>(key, (old) =>
       old ? [...old, data] : []
     );
+
+    input.value = "";
   };
 
-  const handleTodoDeleted = (id: number) => {
-    queryClient.setQueryData<ITodo[]>("/todos", (old) =>
-      old ? old.filter((todo) => todo.id !== id) : []
+  const handleTodoDeleted = (deletedId: number) => {
+    // Remove the item from the query data instantly
+    queryClient.setQueryData<ITodo[]>(key, (old) =>
+      old ? old.filter((todo) => todo.id !== deletedId) : []
     );
   };
 
-  const handleTodoEdited = (updatedTodo: ITodo) => {
-    queryClient.setQueryData<ITodo[]>("/todos", (old) =>
-      old
-        ? old.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
-        : []
+  const handleTodoEdited = (updated: ITodo) => {
+    // Update the item from the query data instantly
+    queryClient.setQueryData<ITodo[]>(key, (old) =>
+      old ? old.map((todo) => (todo.id === updated.id ? updated : todo)) : []
     );
   };
 
   return (
     <Container>
-      <div
-        className="mx-auto my-4 mt-5 p-4 rounded"
-        style={{ width: "100%", maxWidth: "28rem" }}
-      >
-        {isLoading && (
-          <div className="d-flex justify-content-center align-items-center py-5">
-            <Spinner animation="border" />
-          </div>
-        )}
-        {data && (
-          <>
-            {!data.length && (
-              <div className="text-center">
-                <img
-                  className="img-fluid"
-                  src="https://github.githubassets.com/images/modules/notifications/inbox-zero.svg"
-                  alt="work"
-                />
-                <h5 className="mt-5">All caught up!</h5>
-              </div>
-            )}
-            <ListGroup className="rounded-0">
-              {data.map((todo) => (
-                <Todo
-                  key={todo.id}
-                  todo={todo}
-                  onDeleted={handleTodoDeleted}
-                  onEdited={handleTodoEdited}
-                />
-              ))}
-            </ListGroup>
-          </>
-        )}
+      <div className="mx-auto my-4 mt-5 p-4 rounded main-container">
+        <AsyncData isLoading={todos.isLoading} data={todos.data}>
+          {(data) => (
+            <div>
+              {!data.length && (
+                <div className="text-center">
+                  <img
+                    className="img-fluid"
+                    src="https://github.githubassets.com/images/modules/notifications/inbox-zero.svg"
+                    alt="work"
+                  />
+                  <h5 className="mt-5">All caught up!</h5>
+                </div>
+              )}
+              <ListGroup className="rounded-0">
+                {data.map((todo) => (
+                  <Todo
+                    key={todo.id}
+                    todo={todo}
+                    onDeleted={handleTodoDeleted}
+                    onEdited={handleTodoEdited}
+                  />
+                ))}
+              </ListGroup>
+            </div>
+          )}
+        </AsyncData>
         <Form onSubmit={handleSubmit}>
           <InputGroup className="mb-3 my-2">
             <Form.Control
@@ -108,5 +112,3 @@ function App() {
     </Container>
   );
 }
-
-export default App;
