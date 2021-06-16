@@ -1,15 +1,9 @@
-import {
-  Form,
-  Button,
-  Spinner,
-  ListGroup,
-  Container,
-  InputGroup,
-} from 'react-bootstrap'
+import { Form, ListGroup, Container, InputGroup } from 'react-bootstrap'
 import axios from 'axios'
 import Todo from './components/Todo'
 import ITodo from './interfaces/Todo'
 import NoTodos from './components/NoTodos'
+import Button from './components/Button'
 import AsyncData from './components/AsyncData'
 import { FormEventHandler, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -83,16 +77,12 @@ export default function App() {
               placeholder="Add a new todo..."
             />
             <Button
-              disabled={todosMutation.isLoading}
+              isLoading={todosMutation.isLoading}
               variant="primary"
               type="submit"
               className="px-4"
             >
-              {todosMutation.isLoading ? (
-                <Spinner animation="border" size="sm" />
-              ) : (
-                'Add'
-              )}
+              Add
             </Button>
           </InputGroup>
         </Form>
