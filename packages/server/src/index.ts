@@ -1,6 +1,6 @@
 import express from 'express'
 import createAPIRouter from './lib/createAPIRouter'
-import common from 'common'
+import common from '@nested/common'
 
 async function main() {
   console.log(common)
