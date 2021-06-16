@@ -1,5 +1,5 @@
 {
-  "name": "nested",
+  "name": "@nested/server",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
@@ -20,6 +20,6 @@
     "pg": "^8.6.0",
     "url": "^0.11.0",
     "url-parse": "^1.5.1",
-    "common": "1.0.0"
+    "@nested/common": "1.0.0"
   }
 }
