@@ -11,22 +11,26 @@ interface Props {
   onEdited: (todo: ITodo) => any
 }
 
+type TInput = HTMLInputElement
+
 const Todo: FC<Props> = ({ todo, onDeleted, onEdited }) => {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<TInput>(null)
   const [isEditing, setIsEditing] = useState(false)
   const deleteMutation = useMutation(() => axios.delete(`/todos/${todo.id}`), {
     onSuccess: () => onDeleted(todo.id),
   })
-  const editMutation = useMutation((text: string) =>
-    axios.patch(`/todos/${todo.id}`, { text }).then(res => res.data)
-  )
+  const editMutation = useMutation(async (text: string) => {
+    const { data } = await axios.patch<ITodo>(`/todos/${todo.id}`, { text })
+    return data
+  })
 
   const toggleIsEditing = () => setIsEditing(old => !old)
 
   const handleSubmit: FormEventHandler = async e => {
     e.preventDefault()
+    // Terminate early with falsy values
     const input = inputRef.current
-    if (!input?.value) return
+    if (!input?.value.trim()) return
 
     const todo = await editMutation.mutateAsync(input.value)
     toggleIsEditing()
@@ -38,7 +42,12 @@ const Todo: FC<Props> = ({ todo, onDeleted, onEdited }) => {
       {isEditing ? (
         <Form onSubmit={handleSubmit}>
           <InputGroup>
-            <Form.Control ref={inputRef} defaultValue={todo.text} required />
+            <Form.Control
+              autoFocus
+              ref={inputRef}
+              defaultValue={todo.text}
+              required
+            />
             <Button
               isLoading={editMutation.isLoading}
               variant="primary"
