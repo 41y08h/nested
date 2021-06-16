@@ -5,6 +5,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
+    "start": "node build",
     "dev": "nodemon --transpile-only src/index.ts"
   },
   "devDependencies": {
