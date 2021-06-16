@@ -9,7 +9,7 @@ import {
 import axios from 'axios'
 import Todo from './components/Todo'
 import ITodo from './interfaces/Todo'
-import Loading from './components/Loading'
+import NoTodos from './components/NoTodos'
 import AsyncData from './components/AsyncData'
 import { FormEventHandler, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -60,16 +60,7 @@ export default function App() {
         <AsyncData isLoading={todos.isLoading} data={todos.data}>
           {data => (
             <div>
-              {!data.length && (
-                <div className="text-center">
-                  <img
-                    className="img-fluid"
-                    src="https://github.githubassets.com/images/modules/notifications/inbox-zero.svg"
-                    alt="work"
-                  />
-                  <h5 className="mt-5">All caught up!</h5>
-                </div>
-              )}
+              {!data.length && <NoTodos />}
               <ListGroup className="rounded-0">
                 {data.map(todo => (
                   <Todo
